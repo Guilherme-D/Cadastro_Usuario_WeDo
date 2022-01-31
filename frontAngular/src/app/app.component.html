@@ -1,0 +1,163 @@
+<form class="hero__form" [formGroup]="formGroup" (submit)="cadastrar()">
+  <div class="card">
+    <div class="card__title">
+      <span>Cadastro de Usuário</span>
+    </div>
+
+    <div class="card__title error__card" *ngIf="errorMessage">
+      <span>{{errorMessage.error.message}}</span>
+    </div>
+    <div class="card__title success__card" *ngIf="successMessage">
+      <span>{{successMessage}}</span>
+    </div>
+
+    <div class="card__group">
+      <label>Nome</label>
+      <input type="text" formControlName="nome"/>
+    </div>
+
+    <div class="card__parentGroup">
+      <div class="card__group half">
+        <label>Telefone</label>
+        <input type="text" formControlName="telefone"/>
+      </div>
+
+      <div class="card__group half">
+        <label>CPF</label>
+        <input type="text" formControlName="cpf" mask="000.000.000-00||00.000.000/0000-00"/>
+      </div>
+    </div>
+    <div class="card__group">
+      <label>CEP</label>
+      <input type="text" maxlength="8" name="cep" #cep formControlName="cep"/>
+      <button
+        type="button"
+        class="btn"
+        (click)="getEnderecoByCep(cep.value)"
+      >
+        Procurar endereço
+      </button>
+    </div>
+
+  </div>
+
+
+  <div class="card__address" *ngIf="cepValid">
+    <div class="card__group">
+      <label>Rua</label>
+      <input type="text" [value]="address.logradouro" />
+    </div>
+    <div class="card__parentGroup">
+      <div class="card__group half">
+        <label>Número</label>
+        <input type="text" formControlName="numero" />
+      </div>
+      <div class="card__group half">
+        <label>Bairro</label>
+        <input type="text" [value]="address.bairro"/>
+      </div>
+    </div>
+    <div class="card__parentGroup">
+      <div class="card__group half">
+        <label>Cidade</label>
+        <input type="text" [value]="address.localidade"/>
+      </div>
+      <div class="card__group half">
+        <label>Estado</label>
+        <input type="text" [value]="address.uf"/>
+      </div>
+    </div>
+  </div>
+
+  <div>
+
+    <button
+      type="submit"
+    >
+      Enviar
+    </button>
+  </div>
+</form>
+
+<div class="card__cadastros">
+
+  <button
+    type="button"
+    class="btn"
+    (click)="getCadastros(0)"
+  >
+    Visualizar cadastros
+
+  </button>
+
+  <div *ngIf="pageUsers && pageUsers.numberOfElements">
+    <table >
+      <colgroup>
+        <col span="1" style="width: 1%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 15%;">
+        <col span="1" style="width: 5%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 10%;">
+        <col span="1" style="width: 10%;">
+      </colgroup>
+      <tr>
+        <th>id</th>
+        <th>Nome</th>
+        <th>telefone</th>
+        <th>CPF</th>
+        <th>CEP</th>
+        <th>Rua</th>
+        <th>Número</th>
+        <th>Bairro</th>
+        <th>Cidade</th>
+        <th>Estado</th>
+      </tr>
+      <tr *ngFor="let item of pageUsers.content">
+        <td>{{item.id}}</td>
+        <td>{{item.nome}}</td>
+        <td>{{item.telefone}}</td>
+        <td>{{item.cep}}</td>
+        <td>{{item.cpf}}</td>
+        <td>{{item.endereco.rua}}</td>
+        <td>{{item.endereco.numero}}</td>
+        <td>{{item.endereco.bairro}}</td>
+        <td>{{item.endereco.cidade.cidade}}</td>
+        <td>{{item.endereco.estado.estado}}</td>
+      </tr>
+
+    </table>
+
+    <div class="nex_prev__btn">
+      <button
+        type="button"
+        class="btn nex_prev"
+        (click)="getCadastros(pageUsers.number-1)"
+        [disabled]="pageUsers.number == 0"
+      >
+        Anterior
+      </button>
+      <div>
+        {{pageUsers.number}}
+      </div>
+      <button
+        type="button"
+        class="btn nex_prev"
+        (click)="getCadastros(pageUsers.number+1)"
+        [disabled]="pageUsers.number == pageUsers.totalElements-1 || pageUsers.number == 0"
+      >
+        Proximo
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+
+
+</div>
